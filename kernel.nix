@@ -6,10 +6,24 @@ let
   src = fetchFromGitHub {
     owner = "sifive";
     repo = "riscv-linux";
-    # rel/kernel/hifive-premier-p550
-    rev = "022315aa62e5160face9de04d895090794d088b2";
-    sha256 = "sha256-Usai8R18TwrKxPpcCxjrZNo/kLVjSEWcNT/xfw8SxYY=";
+    # dev/kernel/hifive-premier-p550
+    rev = "234cf73a25c0796b81675bcbca686df7cd98b992";
+    sha256 = "sha256-YH34B0SAMng+M89a5sA/KSsJlFeY5ZHn/FR0aNHXuL0=";
   };
+#  src = fetchFromGitHub {
+#    owner = "sifive";
+#    repo = "riscv-linux";
+#    # rel/kernel/hifive-premier-p550
+#    rev = "022315aa62e5160face9de04d895090794d088b2";
+#    sha256 = "sha256-Usai8R18TwrKxPpcCxjrZNo/kLVjSEWcNT/xfw8SxYY=";
+#  };
+#  src = fetchFromGitHub {
+#    owner = "rockos-riscv";
+#    repo = "rockos-kernel";
+#    # rel/kernel/hifive-premier-p550
+#    rev = "f457de2129d5136a56128cf48e6d9ed040e8686c";
+#    sha256 = "sha256-q/z1mED0Tc6ASAjHQ0rtczts4MU8QeReE89/4kLv7Ko=";
+#  };
   kernelVersion = rec {
     # Fully constructed string, example: "5.10.0-rc5".
     string = "${version + "." + patchlevel + "." + sublevel + (lib.optionalString (extraversion != "") extraversion)}";
@@ -23,14 +37,45 @@ let
   modDirVersion = "${kernelVersion.string}";
 in (buildLinux (args // {
   inherit src;
-  enableCommonConfig = false;
+#  baseConfig = "defconfig";
+#  DTB = true;
+#  autoModules = true;
+#  preferBuiltin = true;
+#  target = "vmlinuz.efi";
+#  installTarget = "zinstall";
+#  enableCommonConfig = false;
+#  defconfig = "eic7700_defconfig";
+#  config = ./f;
+#  autoModules = true;
+
   defconfig = "hifive-premier-p550_defconfig";
-#  config = ./config.nezha;
-  autoModules = false;
   structuredExtraConfig = with lib.kernel; {
-#    BCACHEFS_FS = lib.mkForce yes;
-#    DRM_IMG_VOLCANIC = lib.mkForce yes;
+    EFI_ZBOOT = lib.mkForce yes;
+    KERNEL_ZSTD = lib.mkForce yes;
+    SND_SOC_ES8328 = lib.mkForce no;
+    SND_SOC_ES8328_I2C = lib.mkForce no;
+    SND_SOC_ES8328_SPI = lib.mkForce no;
+    ESWIN_MIPI_DSI = lib.mkForce yes;
+    DRM_IMG_VOLCANIC = lib.mkForce yes;
+
+#    USB_DWC3_GADGET = lib.mkForce yes;
+#    USB_DWC3_HOST = lib.mkForce no;
+#    USB_DWC3_DUAL_ROLE = lib.mkForce yes;
+#    KERNEL_UNCOMPRESSED = lib.mkForce no;
+#    EFI_STUB = lib.mkForce no;
+#    BCMDHD = lib.mkForce no;
+#    ESWIN_DSP = lib.mkForce no;
+#    DRM_IMG = lib.mkForce yes;
+#    ESWIN_MIPI_DSI = lib.mkForce no;
+#    DRM_ESWIN = lib.mkForce yes;
+#    DRM_LEGACY = lib.mkForce yes;
+#    SND_SOC_ES8328 = lib.mkForce no;
+#    SND_SOC_ES8328_SPI = lib.mkForce no;
+#    SND_SOC_ES8328_I2C = lib.mkForce no;
+#    SND_SOC_IMX_ES8328 = lib.mkForce no;
+
   };
+
   modDirVersion = "${modDirVersion}";
   version = "${modDirVersion}";
   extraMeta = {
@@ -39,6 +84,7 @@ in (buildLinux (args // {
     hydraPlatforms = [ "" ];
   };
 } // (args.argsOverride or { }))).overrideAttrs {
+  patches = [ ./fix-imagination-gpu-includes.patch ];
 #  preConfigure = ''
 #    patchShebangs ./debian/scripts/misc/annotations
 #    ./debian/scripts/misc/annotations -a riscv64 -e > .config

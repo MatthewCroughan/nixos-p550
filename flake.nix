@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    #nixpkgs.url = "github:matthewcroughan/nixpkgs/mc/riscv-testing";
     flake-parts.url = "github:hercules-ci/flake-parts";
   };
   outputs = inputs@{ flake-parts, self, nixpkgs, ... }:
@@ -15,7 +16,7 @@
       };
       flake = {
         nixosConfigurations.p550 = inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+#          system = "x86_64-linux";
           specialArgs = {
             inherit inputs;
           };
@@ -24,11 +25,6 @@
             ./p550.nix
             ./configuration.nix
             ./repart.nix
-            {
-              nixpkgs.crossSystem = {
-                system = "riscv64-linux";
-              };
-            }
           ];
         };
       };

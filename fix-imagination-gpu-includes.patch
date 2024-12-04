@@ -1,0 +1,12 @@
+diff --git a/drivers/gpu/drm/img/img-volcanic/Makefile b/drivers/gpu/drm/img/img-volcanic/Makefile
+index 087e156a263f..859cbbddd243 100644
+--- a/drivers/gpu/drm/img/img-volcanic/Makefile
++++ b/drivers/gpu/drm/img/img-volcanic/Makefile
+@@ -105,6 +105,7 @@ ccflags-y += -D__linux__ -include $(srctree)/$(src)/config_kernel.h \
+  -include $(srctree)/drivers/gpu/drm/img/kernel_config_compatibility.h \
+  -I$(OUT)/include \
+  -I$(srctree)/drivers/gpu/drm/img \
++ -I$(srctree)/drivers/gpu/drm/img/img-volcanic/include/drm \
+  -I$(srctree)/$(src)/hwdefs/volcanic \
+  -I$(srctree)/$(src)/hwdefs/volcanic/km \
+  -I$(srctree)/$(src)/include/system/rgx_tc \
