@@ -9,23 +9,18 @@
       extraStructuredConfig = {
 #        KERNEL_UNCOMPRESSED = lib.mkForce lib.kernel.no;
         EFI_ZBOOT = lib.mkForce lib.kernel.yes;
-        KERNEL_ZSTD = lib.mkForce lib.kernel.yes;
+        KERNEL_GZIP = lib.mkForce lib.kernel.yes;
+#        KERNEL_ZSTD = lib.mkForce lib.kernel.yes;
       };
     }
   ];
-  nixpkgs.buildPlatform = "x86_64-linux";
-  nixpkgs.hostPlatform = {
-    system = "riscv64-linux";
-#    linux-kernel = {
-#      name = "riscv64-multiplatform";
-#      baseConfig = "defconfig";
-#      DTB = true;
-#      autoModules = true;
-#      preferBuiltin = true;
-#      target = "vmlinuz.efi";
-#      installTarget = "zinstall";
-#    };
+
+  nixpkgs.buildPlatform = lib.systems.examples.gnu64;
+  nixpkgs.hostPlatform = lib.recursiveUpdate (lib.systems.elaborate lib.systems.examples.riscv64) {
+    linux-kernel.target = "vmlinuz.efi";
+    linux-kernel.installTarget = "zinstall";
   };
+
 #  nixpkgs.hostPlatform = lib.recursiveUpdate (lib.systems.elaborate "riscv64-linux") {
 #    system = "riscv64-linux";
 #    linux-kernel = {

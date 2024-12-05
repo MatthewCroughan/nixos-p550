@@ -1,0 +1,186 @@
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 6817e86fffd9..9b8eb378fc1d 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -125,6 +125,13 @@ config RISCV
+ 	select HAVE_GCC_PLUGINS
+ 	select HAVE_GENERIC_VDSO if MMU && 64BIT
+ 	select HAVE_IRQ_TIME_ACCOUNTING
++	select HAVE_KERNEL_BZIP2 if !XIP_KERNEL && !EFI_ZBOOT
++	select HAVE_KERNEL_GZIP if !XIP_KERNEL && !EFI_ZBOOT
++	select HAVE_KERNEL_LZ4 if !XIP_KERNEL && !EFI_ZBOOT
++	select HAVE_KERNEL_LZMA if !XIP_KERNEL && !EFI_ZBOOT
++	select HAVE_KERNEL_LZO if !XIP_KERNEL && !EFI_ZBOOT
++	select HAVE_KERNEL_UNCOMPRESSED if !XIP_KERNEL && !EFI_ZBOOT
++	select HAVE_KERNEL_ZSTD if !XIP_KERNEL && !EFI_ZBOOT
+ 	select HAVE_KPROBES if !XIP_KERNEL
+ 	select HAVE_KPROBES_ON_FTRACE if !XIP_KERNEL
+ 	select HAVE_KRETPROBES if !XIP_KERNEL
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index b43a6bb7e4dc..6ebf505ddd32 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -34,6 +34,9 @@ ifeq ($(CONFIG_ARCH_RV64I),y)
+ 	KBUILD_AFLAGS += -mabi=lp64
+ 
+ 	KBUILD_LDFLAGS += -melf64lriscv
++
++	KBUILD_RUSTFLAGS += -Ctarget-cpu=generic-rv64 --target=riscv64imac-unknown-none-elf \
++			    -Cno-redzone
+ else
+ 	BITS := 32
+ 	UTS_MACHINE := riscv32
+@@ -43,15 +46,22 @@ else
+ 	KBUILD_LDFLAGS += -melf32lriscv
+ endif
+ 
+-ifeq ($(CONFIG_LD_IS_LLD),y)
+-ifeq ($(call test-lt, $(CONFIG_LLD_VERSION), 150000),y)
++ifndef CONFIG_RISCV_USE_LINKER_RELAXATION
+ 	KBUILD_CFLAGS += -mno-relax
+ 	KBUILD_AFLAGS += -mno-relax
+ ifndef CONFIG_AS_IS_LLVM
+ 	KBUILD_CFLAGS += -Wa,-mno-relax
+ 	KBUILD_AFLAGS += -Wa,-mno-relax
+ endif
++# LLVM has an issue with target-features and LTO: https://github.com/llvm/llvm-project/issues/59350
++# Ensure it is aware of linker relaxation with LTO, otherwise relocations may
++# be incorrect: https://github.com/llvm/llvm-project/issues/65090
++else ifeq ($(CONFIG_LTO_CLANG),y)
++	KBUILD_LDFLAGS += -mllvm -mattr=+c -mllvm -mattr=+relax
+ endif
++
++ifeq ($(CONFIG_SHADOW_CALL_STACK),y)
++	KBUILD_LDFLAGS += --no-relax-gp
+ endif
+ 
+ # ISA string setting
+@@ -61,6 +71,10 @@ riscv-march-$(CONFIG_FPU)		:= $(riscv-march-y)fd
+ riscv-march-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-y)c
+ riscv-march-$(CONFIG_RISCV_ISA_V)	:= $(riscv-march-y)v
+ 
++ifneq ($(CONFIG_RISCV_ISA_C),y)
++	KBUILD_RUSTFLAGS += -Ctarget-feature=-c
++endif
++
+ ifdef CONFIG_TOOLCHAIN_NEEDS_OLD_ISA_SPEC
+ KBUILD_CFLAGS += -Wa,-misa-spec=2.2
+ KBUILD_AFLAGS += -Wa,-misa-spec=2.2
+@@ -104,7 +118,9 @@ KBUILD_AFLAGS_MODULE += $(call as-option,-Wa$(comma)-mno-relax)
+ # unaligned accesses.  While unaligned accesses are explicitly allowed in the
+ # RISC-V ISA, they're emulated by machine mode traps on all extant
+ # architectures.  It's faster to have GCC emit only aligned accesses.
++ifneq ($(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS),y)
+ KBUILD_CFLAGS += $(call cc-option,-mstrict-align)
++endif
+ 
+ ifeq ($(CONFIG_STACKPROTECTOR_PER_TASK),y)
+ prepare: stack_protector_prepare
+@@ -124,18 +140,35 @@ boot		:= arch/riscv/boot
+ ifeq ($(CONFIG_XIP_KERNEL),y)
+ KBUILD_IMAGE := $(boot)/xipImage
+ else
++ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_SOC_CANAAN_K210),yy)
++KBUILD_IMAGE := $(boot)/loader.bin
++else
++ifeq ($(CONFIG_EFI_ZBOOT),)
+ KBUILD_IMAGE	:= $(boot)/Image.gz
++else
++KBUILD_IMAGE := $(boot)/vmlinuz.efi
++endif
++endif
++endif
++
++boot					:= arch/riscv/boot
++boot-image-y				:= Image
++boot-image-$(CONFIG_KERNEL_BZIP2)	:= Image.bz2
++boot-image-$(CONFIG_KERNEL_GZIP)	:= Image.gz
++boot-image-$(CONFIG_KERNEL_LZ4)		:= Image.lz4
++boot-image-$(CONFIG_KERNEL_LZMA)	:= Image.lzma
++boot-image-$(CONFIG_KERNEL_LZO)		:= Image.lzo
++boot-image-$(CONFIG_KERNEL_ZSTD)	:= Image.zst
++ifdef CONFIG_RISCV_M_MODE
++boot-image-$(CONFIG_ARCH_CANAAN)	:= loader.bin
+ endif
++boot-image-$(CONFIG_EFI_ZBOOT)		:= vmlinuz.efi
++boot-image-$(CONFIG_XIP_KERNEL)		:= xipImage
++KBUILD_IMAGE				:= $(boot)/$(boot-image-y)
+ 
+ libs-y += arch/riscv/lib/
+ libs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+ 
+-PHONY += vdso_install
+-vdso_install:
+-	$(Q)$(MAKE) $(build)=arch/riscv/kernel/vdso $@
+-	$(if $(CONFIG_COMPAT),$(Q)$(MAKE) \
+-		$(build)=arch/riscv/kernel/compat_vdso compat_$@)
+-
+ ifeq ($(KBUILD_EXTMOD),)
+ ifeq ($(CONFIG_MMU),y)
+ prepare: vdso_prepare
+@@ -147,30 +180,22 @@ vdso_prepare: prepare0
+ endif
+ endif
+ 
+-ifneq ($(CONFIG_XIP_KERNEL),y)
+-ifeq ($(CONFIG_RISCV_M_MODE)$(CONFIG_ARCH_CANAAN),yy)
+-KBUILD_IMAGE := $(boot)/loader.bin
+-else
+-ifeq ($(CONFIG_EFI_ZBOOT),)
+-KBUILD_IMAGE := $(boot)/Image.gz
+-else
+-KBUILD_IMAGE := $(boot)/vmlinuz.efi
+-endif
+-endif
+-endif
+-BOOT_TARGETS := Image Image.gz loader loader.bin xipImage vmlinuz.efi
++vdso-install-y			+= arch/riscv/kernel/vdso/vdso.so.dbg
++vdso-install-$(CONFIG_COMPAT)	+= arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg
++
++BOOT_TARGETS := Image Image.gz Image.bz2 Image.lz4 Image.lzma Image.lzo Image.zst loader loader.bin xipImage vmlinuz.efi
+ 
+ all:	$(notdir $(KBUILD_IMAGE))
+ 
++loader.bin: loader
++Image.gz Image.bz2 Image.lz4 Image.lzma Image.lzo Image.zst loader xipImage vmlinuz.efi: Image
++
+ $(BOOT_TARGETS): vmlinux
+ 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+ 	@$(kecho) '  Kernel: $(boot)/$@ is ready'
+ 
+-Image.%: Image
+-	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+-
+-install: KBUILD_IMAGE := $(boot)/Image
+-zinstall: KBUILD_IMAGE := $(boot)/Image.gz
++# the install target always installs KBUILD_IMAGE (which may be compressed)
++# but keep the zinstall target for compatibility with older releases
+ install zinstall:
+ 	$(call cmd,install)
+ 
+diff --git a/arch/riscv/boot/install.sh b/arch/riscv/boot/install.sh
+index 4c63f3f0643d..a8df7591513a 100755
+--- a/arch/riscv/boot/install.sh
++++ b/arch/riscv/boot/install.sh
+@@ -17,15 +17,18 @@
+ #   $3 - kernel map file
+ #   $4 - default install path (blank if root directory)
+ 
+-if [ "$(basename $2)" = "Image.gz" ]; then
++case "${2##*/}" in
+ # Compressed install
++Image.*|vmlinuz.efi)
+   echo "Installing compressed kernel"
+   base=vmlinuz
+-else
++  ;;
+ # Normal install
++*)
+   echo "Installing normal kernel"
+   base=vmlinux
+-fi
++  ;;
++esac
+ 
+ if [ -f $4/$base-$1 ]; then
+   mv $4/$base-$1 $4/$base-$1.old

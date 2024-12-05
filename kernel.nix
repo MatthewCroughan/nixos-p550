@@ -1,5 +1,7 @@
 { lib
 , buildLinux
+, gcc14Stdenv
+, hexdump
 , fetchFromGitHub
 , ... } @ args:
 let
@@ -50,8 +52,9 @@ in (buildLinux (args // {
 
   defconfig = "hifive-premier-p550_defconfig";
   structuredExtraConfig = with lib.kernel; {
-    EFI_ZBOOT = lib.mkForce yes;
-    KERNEL_ZSTD = lib.mkForce yes;
+#    EFI_ZBOOT = lib.mkForce yes;
+#    KERNEL_ZSTD = lib.mkForce yes;
+
     SND_SOC_ES8328 = lib.mkForce no;
     SND_SOC_ES8328_I2C = lib.mkForce no;
     SND_SOC_ES8328_SPI = lib.mkForce no;
@@ -83,12 +86,25 @@ in (buildLinux (args // {
     platforms = [ "riscv64-linux" ];
     hydraPlatforms = [ "" ];
   };
-} // (args.argsOverride or { }))).overrideAttrs {
-  patches = [ ./fix-imagination-gpu-includes.patch ];
+} // (args.argsOverride or { }))).overrideAttrs (old: {
+  patches = [
+    ./fix-imagination-gpu-includes.patch
+    ./fix-zboot.patch
+  ];
+  nativeBuildInputs = old.nativeBuildInputs ++ [
+    hexdump
+  ];
+#  prePatch = ''
+#    substituteInPlace arch/riscv/Makefile --replace-fail 'Image.gz' 'Image.zst'
+#    substituteInPlace arch/riscv/boot/install.sh --replace-fail 'Image.gz' 'Image.zst'
+#    cat arch/riscv/Makefile
+#    cat arch/riscv/boot/install.sh
+#  '';
 #  preConfigure = ''
 #    patchShebangs ./debian/scripts/misc/annotations
 #    ./debian/scripts/misc/annotations -a riscv64 -e > .config
 #    make oldconfig
 #  '';
-}
+  NIX_CFLAGS_LINK = "--emit-relocs";
+})
 
