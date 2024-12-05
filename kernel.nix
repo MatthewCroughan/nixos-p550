@@ -105,6 +105,5 @@ in (buildLinux (args // {
 #    ./debian/scripts/misc/annotations -a riscv64 -e > .config
 #    make oldconfig
 #  '';
-  NIX_CFLAGS_LINK = "--emit-relocs";
 })
 

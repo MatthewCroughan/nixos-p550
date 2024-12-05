@@ -9,8 +9,8 @@
       extraStructuredConfig = {
 #        KERNEL_UNCOMPRESSED = lib.mkForce lib.kernel.no;
         EFI_ZBOOT = lib.mkForce lib.kernel.yes;
-        KERNEL_GZIP = lib.mkForce lib.kernel.yes;
-#        KERNEL_ZSTD = lib.mkForce lib.kernel.yes;
+#        KERNEL_GZIP = lib.mkForce lib.kernel.yes;
+        KERNEL_ZSTD = lib.mkForce lib.kernel.yes;
       };
     }
   ];
