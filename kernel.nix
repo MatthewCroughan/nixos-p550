@@ -51,6 +51,8 @@ in (buildLinux (args // {
 #  autoModules = true;
 
   defconfig = "hifive-premier-p550_defconfig";
+  autoModules = false;
+  enableCommonConfig = true;
   structuredExtraConfig = with lib.kernel; {
 #    EFI_ZBOOT = lib.mkForce yes;
 #    KERNEL_ZSTD = lib.mkForce yes;
@@ -58,8 +60,8 @@ in (buildLinux (args // {
     SND_SOC_ES8328 = lib.mkForce no;
     SND_SOC_ES8328_I2C = lib.mkForce no;
     SND_SOC_ES8328_SPI = lib.mkForce no;
-    ESWIN_MIPI_DSI = lib.mkForce yes;
-    DRM_IMG_VOLCANIC = lib.mkForce yes;
+    ESWIN_MIPI_DSI = lib.mkForce no;
+    DRM_IMG_VOLCANIC = lib.mkForce no;
 
 #    USB_DWC3_GADGET = lib.mkForce yes;
 #    USB_DWC3_HOST = lib.mkForce no;

@@ -10,14 +10,14 @@
     memoryPercent = 90;
   };
 
-#  hardware.opengl = {
-#    enable = true;
-#    extraPackages = with pkgs; [
-#      vulkan-loader
-#      vulkan-validation-layers
-#      vulkan-extension-layer
-#    ];
-#  };
+  hardware.opengl = {
+    enable = true;
+    extraPackages = with pkgs; [
+      vulkan-loader
+      vulkan-validation-layers
+      vulkan-extension-layer
+    ];
+  };
 
   services.openssh = {
     enable = true;
@@ -52,7 +52,7 @@
 
   services.avahi = {
     openFirewall = true;
-    nssmdns = true;
+    nssmdns4 = true;
     enable = true;
     publish = {
       enable = true;
@@ -65,8 +65,10 @@
     vim
     git
     btop
+    sway
+    alacritty
+    dmenu
     zellij
-    magic-wormhole
   ];
 
   security.sudo.extraRules = [{

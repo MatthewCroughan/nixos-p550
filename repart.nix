@@ -16,6 +16,10 @@ in
         contents = {
           "/EFI/BOOT/BOOT${lib.toUpper efiArch}.EFI".source = "${pkgs.systemd}/lib/systemd/boot/efi/systemd-boot${efiArch}.efi";
           "/EFI/Linux/${config.system.boot.loader.ukiFile}".source = "${config.system.build.uki}/${config.system.boot.loader.ukiFile}";
+          "/loader/loader.conf".source = pkgs.writeText "loader.conf" ''
+            timeout 5
+            console-mode keep
+          '';
         };
         repartConfig = {
           Type = "esp";

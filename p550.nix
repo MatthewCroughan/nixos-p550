@@ -46,6 +46,10 @@
 #    };
 #  };
 
+  boot.loader = {
+    systemd-boot.enable = true;
+  };
+
   boot.kernelPackages = pkgs.linuxPackagesFor (pkgs.callPackage ./kernel.nix { });
   boot.initrd.includeDefaultModules = false;
   boot.initrd.availableKernelModules = lib.mkForce [

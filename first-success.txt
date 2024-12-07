@@ -1,0 +1,336 @@
+pll config ok
+Firmware version:1.2;disable ECC
+PHY0 training process:100%
+PHY1 training process:100%
+DDR type:LPDDR5;Size:16GB,Data Rate:6400MT/s
+DDR self test OK
+
+OpenSBI v1.4
+   ____                    _____ ____ _____
+  / __ \                  / ____|  _ \_   _|
+ | |  | |_ __   ___ _ __ | (___ | |_) || |
+ | |  | | '_ \ / _ \ '_ \ \___ \|  _ < | |
+ | |__| | |_) |  __/ | | |____) | |_) || |_
+  \____/| .__/ \___|_| |_|_____/|____/_____|
+        | |
+        |_|
+
+Platform Name             : ESWIN EIC770X
+Platform Features         : none
+Platform HART Count       : 4
+Platform IPI Device       : aclint-mswi
+Platform Timer Device     : aclint-mtimer @ 1000000Hz
+Platform Console Device   : uart8250
+Platform HSM Device       : ---
+Platform PMU Device       : ---
+Platform Reboot Device    : eswin_eic770x_reset
+Platform Shutdown Device  : eswin_eic770x_reset
+Platform Suspend Device   : ---
+Platform CPPC Device      : ---
+Firmware Base             : 0x80000000
+Firmware Size             : 344 KB
+Firmware RW Offset        : 0x40000
+Firmware RW Size          : 88 KB
+Firmware Heap Offset      : 0x4c000
+Firmware Heap Size        : 40 KB (total), 2 KB (reserved), 9 KB (used), 28 KB (free)
+Firmware Scratch Size     : 4096 B (total), 296 B (used), 3800 B (free)
+Runtime SBI Version       : 2.0
+
+Domain0 Name              : root
+Domain0 Boot HART         : 3
+Domain0 HARTs             : 0*,1*,2*,3*
+Domain0 Region00          : 0x0000000050900000-0x0000000050900fff M: (I,R,W) S/U: (R,W)
+Domain0 Region01          : 0x0000000002008000-0x000000000200bfff M: (I,R,W) S/U: ()
+Domain0 Region02          : 0x0000000002000000-0x0000000002007fff M: (I,R,W) S/U: ()
+Domain0 Region03          : 0x0000000080040000-0x000000008005ffff M: (R,W) S/U: ()
+Domain0 Region04          : 0x0000000080000000-0x000000008003ffff M: (R,X) S/U: ()
+Domain0 Region05          : 0x0000001000000000-0x0000007fffffffff M: () S/U: ()
+Domain0 Region06          : 0x0000000000000000-0xffffffffffffffff M: () S/U: (R,W,X)
+Domain0 Next Address      : 0x0000000080200000
+Domain0 Next Arg1         : 0x00000000f8000000
+Domain0 Next Mode         : S-mode
+Domain0 SysReset          : yes
+Domain0 SysSuspend        : yes
+
+Boot HART ID              : 3
+Boot HART Domain          : root
+Boot HART Priv Version    : v1.11
+Boot HART Base ISA        : rv64imafdchx
+Boot HART ISA Extensions  : sscofpmf,zihpm
+Boot HART PMP Count       : 8
+Boot HART PMP Granularity : 12 bits
+Boot HART PMP Address Bits: 39
+Boot HART MHPM Info       : 4 (0x00000078)
+Boot HART MIDELEG         : 0x0000000000002666
+Boot HART MEDELEG         : 0x0000000000f00509
+
+
+U-Boot 2024.01 (Aug 30 2024 - 10:46:19 +0000)
+
+CPU:   rv64imafdc_zba_zbb
+EFI stub: Decompressing Linux Kernel...
+EFI stub: EFI_RNG_PROTOCOL unavailable
+EFI stub: Loaded initrd from LINUX_EFI_INITRD_MEDIA_GUID device path
+EFI stub: Using DTB from configuration table
+EFI stub: Exiting boot services...
+[    0.398875] bus error of cause event: 9, accrued: 0x220, physical address: 0x50900000
+[    0.408458] bus error of cause event: 9, accrued: 0x220, physical address: 0x50910000
+[    0.429277] bus error of cause event: 9, accrued: 0x220, physical address: 0x50920000
+[    0.989094] eswin_sata_sid_cfg success
+[    1.114572] No power control gpio found, maybe not needed
+[    2.040965] dw-hdmi-eswin 502a0000.hdmi: failed to get edid
+
+<<< NixOS Stage 1 >>>
+
+[    2.428945] mmc1: error -84 reading general info of SD ext reg
+[    2.434914] mmc1: error -84 whilst initialising SD card
+running udev...
+Starting systemd-udevd version 256.7
+[    2.577872] mmc1: error -84 reading general info of SD ext reg
+[    2.583832] mmc1: error -84 whilst initialising SD card
+[    2.718199] mmc1: error -84 reading general info of SD ext reg
+[    2.724147] mmc1: error -84 whilst initialising SD card
+[    2.877996] mmc1: error -84 reading general info of SD ext reg
+[    2.883996] mmc1: error -84 whilst initialising SD card
+kbd_mode: KDSKBMODE: Inappropriate ioctl for device
+starting device mapper and LVM...
+File descriptor 8 (/dev/console) leaked on lvm invocation. Parent PID 1: /nix/store/bxvvicw1hyic025b8b00nrywi1k6yzyl-extra-utils/bin/ash
+File descriptor 9 (/dev/console) leaked on lvm invocation. Parent PID 1: /nix/store/bxvvicw1hyic025b8b00nrywi1k6yzyl-extra-utils/bin/ash
+checking /dev/disk/by-label/nixos...
+fsck (busybox 1.36.1)
+[fsck.ext4 (1) -- /mnt-root/] fsck.ext4 -a /dev/disk/by-label/nixos
+nixos: clean, 116849/144000 files, 382995/575568 blocks
+mounting /dev/disk/by-label/nixos on /...
+
+<<< NixOS Stage 2 >>>
+
+running activation script...
+setting up /etc...
+starting systemd...
+
+Welcome to NixOS 25.05 (Warbler)!
+
+[  OK  ] Created slice Slice /system/getty.
+[  OK  ] Created slice Slice /system/modprobe.
+[  OK  ] Created slice Slice /system/serial-getty.
+[  OK  ] Created slice Slice /system/systemd-fsck.
+[  OK  ] Created slice Slice /system/systemd-zram-setup.
+[  OK  ] Created slice User and Session Slice.
+[  OK  ] Started Dispatch Password Requests to Console Directory Watch.
+[  OK  ] Started Forward Password Requests to Wall Directory Watch.
+         Expecting device /dev/disk/by-label/ESP...
+         Expecting device /dev/ttyS0...
+         Expecting device /dev/zram0...
+[  OK  ] Reached target Local Encrypted Volumes.
+[  OK  ] Reached target Containers.
+[  OK  ] Reached target Path Units.
+[  OK  ] Reached target Remote File Systems.
+[  OK  ] Reached target Slice Units.
+[  OK  ] Listening on Process Core Dump Socket.
+[  OK  ] Listening on Credential Encryption/Decryption.
+[  OK  ] Listening on Journal Socket (/dev/log).
+[  OK  ] Listening on Journal Sockets.
+[  OK  ] Listening on Userspace Out-Of-Memory (OOM) Killer Socket.
+[  OK  ] Listening on udev Control Socket.
+[  OK  ] Listening on udev Kernel Socket.
+         Mounting Huge Pages File System...
+         Mounting POSIX Message Queue File System...
+         Mounting Kernel Debug File System...
+         Starting Create List of Static Device Nodes...
+         Starting Load Kernel Module configfs...
+         Starting Load Kernel Module drm...
+         Starting Load Kernel Module efi_pstore...
+         Starting Load Kernel Module fuse...
+         Starting mount-pstore.service...
+         Starting Journal Service...
+         Starting Load Kernel Modules...
+         Starting Remount Root and Kernel File Systems...
+         Starting Coldplug All udev Devices...
+[  OK  ] Mounted Huge Pages File System.
+[  OK  ] Mounted POSIX Message Queue File System.
+[  OK  ] Mounted Kernel Debug File System.
+[  OK  ] Finished Create List of Static Device Nodes.
+[  OK  ] Finished Load Kernel Module configfs.
+[  OK  ] Finished Load Kernel Module drm.
+[  OK  ] Finished Load Kernel Module efi_pstore.
+[  OK  ] Started Journal Service.
+[  OK  ] Finished Load Kernel Module fuse.
+[  OK  ] Finished Load Kernel Modules.
+[  OK  ] Finished Remount Root and Kernel File Systems.
+         Mounting FUSE Control File System...
+         Mounting Kernel Configuration File System...
+         Starting Grow Root File System...
+         Starting Flush Journal to Persistent Storage...
+         Starting Load/Save OS Random Seed...
+         Starting Apply Kernel Variables...
+         Starting Create Static Device Nodes in /dev gracefully...
+[  OK  ] Mounted FUSE Control File System.
+[  OK  ] Finished Coldplug All udev Devices.
+[  OK  ] Mounted Kernel Configuration File System.
+[  OK  ] Finished Load/Save OS Random Seed.
+[  OK  ] Finished Grow Root File System.
+[  OK  ] Finished Flush Journal to Persistent Storage.
+[  OK  ] Finished Apply Kernel Variables.
+[  OK  ] Finished Create Static Device Nodes in /dev gracefully.
+[  OK  ] Reached target First Boot Complete.
+         Starting Create Static Device Nodes in /dev...
+[  OK  ] Finished Create Static Device Nodes in /dev.
+[  OK  ] Reached target Preparation for Local File Systems.
+         Starting Rule-based Manager for Device Events and Files...
+[  OK  ] Started Rule-based Manager for Device Events and Files.
+[  OK  ] Found device /dev/zram0.
+         Starting Create swap on /dev/zram0...
+[  OK  ] Found device /dev/ttyS0.
+[  OK  ] Finished Create swap on /dev/zram0.
+         Activating swap Compressed Swap on /dev/zram0...
+[   13.585873] OF: graph: no port node found in /soc/i2c@50980000/fusb303b@21
+[  OK  ] Found device Flash_Drive_FIT ESP.
+[  OK     13.728790] debugfs: File 'Playback' in directory 'dapm' already present!
+0m] Activated swap Compressed Swap on /dev/zram0.
+[  OK  ] Finished mount-pstore.service.
+[  OK  ] Reached target Sound Card.
+[  OK  ] Reached target Swaps.
+[  OK  ] Listening on Load/Save RF Kill Switch Status /dev/rfkill Watch.
+         Mounting /run/wrappers...
+         Starting File System Check on /dev/disk/by-label/ESP...
+         Starting Virtual Console Setup...
+[  OK  ] Mounted /run/wrappers.
+         Starting Create SUID/SGID Wrappers...
+[   14.043213] I/O error, dev sda, sector 259080 op 0x0:(READ) flags 0x80700 phys_seg 11 prio class 2
+[   14.052456] device offline error, dev sda, sector 259176 op 0x0:(READ) flags 0x80700 phys_seg 19 prio class 2
+[   14.062629] device offline error, dev sda, sector 259168 op 0x0:(READ) flags 0x3000 phys_seg 1 prio class 2
+[   14.072597] EXT4-fs error (device sda2): __ext4_get_inode_loc_noinmem:4513: inode #115993: block 7564: comm loadkeys: unable to read itable block
+[   14.072600] device offline error, dev sda, sector 3262464 op 0x1:(WRITE) flags 0x0 phys_seg 1 prio class 2
+[   14.095658] Buffer I/O error on device sda2, logical block 382976
+[   14.101921] device offline error, dev sda, sector 46072 op 0x0:(READ) flags 0x80700 phys_seg 1 prio class 2
+[   14.111948] device offline error, dev sda, sector 3266568 op 0x1:(WRITE) flags 0x0 phys_seg 1 prio class 2
+[   14.121787] Buffer I/O error on device sda2, logical block 383489
+[   14.127989] Buffer I/O error on device sda2, logical block 383490
+[   14.134179] Buffer I/O error on device sda2, logical block 383491
+[   14.140408] device offline error, dev sda, sector 3262464 op 0x1:(WRITE) flags 0x800 phys_seg 1 prio class 2
+[   14.150414] Buffer I/O error on device sda2, logical block 382976
+[   14.156639] device offline error, dev sda, sector 3168472 op 0x0:(READ) flags 0x3000 phys_seg 1 prio class 2
+[   14.166668] device offline error, dev sda, sector 2974784 op 0x0:(READ) flags 0x3000 phys_seg 1 prio class 2
+[   14.176675] device offline error, dev sda, sector 3266616 op 0x1:(WRITE) flags 0x800 phys_seg 2 prio class 2
+[   14.176677] EXT4-fs error (device sda2): __ext4_find_entry:1682: inode #110673: comm cp: reading directory lblock 0
+[   14.186616] Buffer I/O error on device sda2, logical block 383495
+[   14.203430] Buffer I/O error on device sda2, logical block 383496
+[FAILED[   14.209627] Buffer I/O error on device sda2, logical block 383497
+] Failed to [   14.217206] Buffer I/O error on device sda2, logical block 383498
+start C[   14.224748] Buffer I/O error on device sda2, logical block 383499
+reate SUID/SGID [   14.232351] Buffer I/O error on dev sda1, logical block 5503, async page read
+Wrappers.
+See 'systemctl s[   14.242353] EXT4-fs error (device sda2): __ext4_get_inode_loc_noinmem:4513: inode #115993: block 7564: comm loadkeys: unable to read itable block
+tatus suid-sgid-[   14.245505] Aborting journal on device sda2-8.
+wrappers.service[   14.262880] Buffer I/O error on dev sda2, logical block 0, lost sync page write
+[   14.262901] EXT4-fs (sda2): I/O error while writing superblock
+
+[   14.262957] EXT4-fs error (device sda2): ext4_journal_check_start:84: comm systemd-journal: Detected aborted journal
+[  OK     14.265697] Buffer I/O error on dev sda2, logical block 262144, lost sync page write
+0m] Finished    14.298785] JBD2: I/O error when updating journal superblock for sda2-8.
+;1;39mFile Syste[   14.299698] Buffer I/O error on dev sda2, logical block 0, lost sync page write
+m Check on /dev/disk/by-label/ESP.
+[  OK  ] Lis[   14.315711] EXT4-fs (sda2): I/O error while writing superblock
+tening on    14.315719] EXT4-fs (sda2): Remounting filesystem read-only
+39mBoot Entries Service Socket.
+[FAILED] Failed to start Update Boot Loader Random Seed.
+See 'systemctl status systemd-boot-random-seed.service' for details.
+[  OK  ] Stopped File System Check on /dev/disk/by-label/ESP.
+[FAILED] Failed to start Create System Files and Directories.
+See 'systemctl status systemd-tmpfiles-setup.service' for details.
+[FAILED] Failed to start Userspace Out-Of-Memory (OOM) Killer.
+See 'systemctl status systemd-oomd.service' for details.
+[FAILED] Failed to start Network Time Synchronization.
+See 'systemctl status systemd-timesyncd.service' for details.
+[FAILED] Failed to start Record System Boot/Shutdown in UTMP.
+See 'systemctl status systemd-update-utmp.service' for details.
+[FAILED] Failed to start Virtual Console Setup.
+See 'systemctl status systemd-vconsole-setup.service' for details.
+[FAILED] Failed to start Userspace Out-Of-Memory (OOM) Killer.
+See 'systemctl status systemd-oomd.service' for details.
+[FAILED] Failed to start Network Time Synchronization.
+See 'systemctl status systemd-timesyncd.service' for details.
+[  OK  ] Reached target System Initialization.
+[  OK  ] Started Discard unused filesystem blocks once a week.
+[  OK  ] Started Daily Cleanup of Temporary Directories.
+[  OK  ] Reached target Timer Units.
+[  OK  ] Listening on Avahi mDNS/DNS-SD Stack Activation Socket.
+[  OK  ] Listening on D-Bus System Message Bus Socket.
+[FAILED] Failed to listen on Nix Daemon Socket.
+See 'systemctl status nix-daemon.socket' for details.
+[  OK  ] Listening on Hostname Service Socket.
+[  OK  ] Reached target Socket Units.
+[  OK  ] Reached target Basic System.
+[FAILED] Failed to start Kernel Auditing.
+See 'systemctl status audit.service' for details.
+[FAILED] Failed to start Avahi mDNS/DNS-SD Stack.
+See 'systemctl status avahi-daemon.service' for details.
+[FAILED] Failed to start Name Service Cache Daemon (nsncd).
+See 'systemctl status nscd.service' for details.
+[DEPEND] Dependency failed for Host and Network Name Lookups.
+[DEPEND] Dependency failed for User and Group Name Lookups.
+[FAILED] Failed to start Reset console on configuration changes.
+See 'systemctl status reload-systemd-vconsole-setup.service' for details.
+[FAILED] Failed to start resolvconf update.
+See 'systemctl status resolvconf.service' for details.
+[  OK  ] Reached target Preparation for Network.
+[FAILED] Failed to start DHCP Client.
+See 'systemctl status dhcpcd.service' for details.
+[FAILED] Failed to start Networking Setup.
+See 'systemctl status network-setup.service' for details.
+[DEPEND] Dependency failed for Extra networking commands..
+[  OK  ] Reached target Network.
+[  OK  ] Reached target Network is Online.
+[FAILED] Failed to start SSH Daemon.
+See 'systemctl status sshd.service' for details.
+[FAILED] Failed to start Name Service Cache Daemon (nsncd).
+See 'systemctl status nscd.service' for details.
+[DEPEND] Dependency failed for Host and Network Name Lookups.
+[DEPEND] Dependency failed for User and Group Name Lookups.
+[FAILED] Failed to start resolvconf update.
+See 'systemctl status resolvconf.service' for details.
+[FAILED] Failed to start DHCP Client.
+See 'systemctl status dhcpcd.service' for details.
+[FAILED] Failed to start SSH Daemon.
+See 'systemctl status sshd.service' for details.
+[FAILED] Failed to start Userspace Out-Of-Memory (OOM) Killer.
+See 'systemctl status systemd-oomd.service' for details.
+[FAILED] Failed to start Network Time Synchronization.
+See 'systemctl status systemd-timesyncd.service' for details.
+[FAILED] Failed to start Name Service Cache Daemon (nsncd).
+See 'systemctl status nscd.service' for details.
+[DEPEND] Dependency failed for Host and Network Name Lookups.
+[DEPEND] Dependency failed for User and Group Name Lookups.
+[FAILED] Failed to start Name Service Cache Daemon (nsncd).
+See 'systemctl status nscd.service' for details.
+[DEPEND] Dependency failed for Host and Network Name Lookups.
+[DEPEND] Dependency failed for User and Group Name Lookups.
+[FAILED] Failed to start resolvconf update.
+See 'systemctl status resolvconf.service' for details.
+[FAILED] Failed to start DHCP Client.
+See 'systemctl status dhcpcd.service' for details.
+[FAILED] Failed to start SSH Daemon.
+See 'systemctl status sshd.service' for details.
+[FAILED] Failed to start User Login Management.
+See 'systemctl status systemd-logind.service' for details.
+[FAILED] Failed to start Userspace Out-Of-Memory (OOM) Killer.
+See 'systemctl status systemd-oomd.service' for details.
+[FAILED] Failed to start Network Time Synchronization.
+See 'systemctl status systemd-timesyncd.service' for details.
+[FAILED] Failed to start Permit User Sessions.
+See 'systemctl status systemd-user-sessions.service' for details.
+[FAILED] Failed to start Getty on tty1.
+See 'systemctl status getty@tty1.service' for details.
+[FAILED] Failed to start Serial Getty on ttyS0.
+See 'systemctl status serial-getty@ttyS0.service' for details.
+[  OK  ] Reached target Login Prompts.
+[  OK  ] Reached target Multi-User System.
+[   24.430841] pac193x 4-0010: get command:31 value error
+[   27.758347] pac193x 4-0010: get command:31 value error
+[   29.008660] pac193x 4-0010: get command:31 value error
+[   32.462318] pac193x 4-0010: get command:31 value error
+[   33.710379] pac193x 4-0010: get command:31 value error
+[   34.960398] pac193x 4-0010: get command:31 value error
+[   37.228735] pac193x 4-0010: get command:31 value error
+[   39.584309] pac193x 4-0010: get command:31 value error
+[   40.816436] pac193x 4-0010: get command:31 value error
